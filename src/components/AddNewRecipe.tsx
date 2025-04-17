@@ -49,7 +49,7 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
 
       let ingredients: Ingredient[];
 
-      console.log('Raw LLM result message:', message);
+      //console.log('Raw LLM result message:', message);
 
       try {
         let cleaned = message.trim();
@@ -64,14 +64,14 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
           cleaned += ']';
         }
 
-        console.log('🧼 Cleaned LLM JSON:', cleaned);
+        //console.log('🧼 Cleaned LLM JSON:', cleaned);
 
         ingredients = JSON.parse(cleaned);
-        console.log('✅ Parsed ingredients:', ingredients);
+        //console.log('✅ Parsed ingredients:', ingredients);
       } catch (err) {
         console.error('❌ Failed to parse LLM response:', err);
         toast.error('Oops! LLM gave a broken response. Please try again.');
-        alert(`LLM gave broken JSON:\n\n${message}`);
+        //alert(`LLM gave broken JSON:\n\n${message}`);
         return;
       }
 

@@ -10,7 +10,7 @@ import AddNewRecipe from './components/AddNewRecipe';
 
 const API_URL = "https://vivachef.onrender.com";
 
-console.log("API_URL ===>", API_URL);
+//console.log("API_URL ===>", API_URL);
 
 function App() {
   // state management
