@@ -8,7 +8,7 @@ import GroceryList from './components/GroceryList';
 import type { Recipe } from './types';
 import AddNewRecipe from './components/AddNewRecipe';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "https://vivachef.onrender.com";
 
 console.log("API_URL ===>", API_URL);
 
