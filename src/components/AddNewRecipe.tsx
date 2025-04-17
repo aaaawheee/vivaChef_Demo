@@ -48,23 +48,34 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
       const message = llmJson?.result;
 
       let ingredients: Ingredient[];
-      try {
 
-        console.log('Raw LLM result message:', message);
+      console.log('Raw LLM result message:', message);
 
-
-        if (typeof message === 'string') {
-          ingredients = JSON.parse(message);
-        } else if (Array.isArray(message)) {
-          ingredients = message;
-        } else {
-          throw new Error('Unexpected format from LLM');
-        }
-      } catch (parseErr) {
-        console.error('Failed to parse LLM output:', parseErr);
-        toast.error('Could not parse recipe from LLM.');
+      if (typeof message !== 'string' && !Array.isArray(message)) {
+        console.error('Unexpected LLM format:', message);
+        toast.error('LLM response format is invalid.');
         return;
       }
+
+      try {
+        const cleanMessage = typeof message === 'string' ? message.trim() : JSON.stringify(message);
+
+        // Optional: try to sanitize a trailing comma or orphaned object
+        const sanitized = cleanMessage.replace(/,\s*{?\s*}?\s*$/, ''); // crude but useful
+
+        ingredients = JSON.parse(sanitized);
+        console.log('✅ Parsed ingredients:', ingredients);
+      } catch (parseErr) {
+        console.error('❌ Failed to parse LLM response:', parseErr);
+        console.error('🔍 Possibly malformed JSON string:', message);
+        toast.error('LLM gave a broken response. Please try again.');
+
+        // Show a debugging alert (optional)
+        alert(`LLM response was broken:\n\n${message}`);
+
+        return;
+      }
+
 
       // Save all ingredients
       const savePromises = ingredients.map((ing) =>
