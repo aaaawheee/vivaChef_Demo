@@ -169,13 +169,19 @@ app.post('/api/llm/generate-recipe', async (req, res) => {
     return res.status(400).json({ error: 'Query is required' });
   }
 
-  const prompt = `Give me a recipe in JSON array format (skip _id) for "${query}" for 8 people with one document per ingredient having fields:
-- Dish name: "${query}"
-- Quantity: number
-- Unit of Measure: string (use "cup", "tsp", "tbsp" or leave blank for spices like saffron)
-- Ingredient: name of the ingredient
+  const prompt = `Please provide a recipe for "${query}" for 8 people, in the following JSON array format:
+                  [
+                    {
+                      "Dish name": "${query}",
+                      "Quantity": number,
+                      "Unit of Measure": string (use "cup", "tsp", "tbsp", or leave empty for spices like saffron),
+                      "Ingredient": name of the ingredient
+                    },
+                    ...
+                  ]
 
-Only respond with the array of JSON objects, no explanation.`;
+                  Respond **only** with the array of JSON objects, **without any extra explanation** or text outside the JSON.
+                  `;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
