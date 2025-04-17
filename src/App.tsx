@@ -8,7 +8,7 @@ import GroceryList from './components/GroceryList';
 import type { Recipe } from './types';
 import AddNewRecipe from './components/AddNewRecipe';
 
-const API_URL = "https://vivachef.onrender.com/api";
+const API_URL = "https://vivachef.onrender.com";
 
 console.log("API_URL ===>", API_URL);
 
@@ -32,7 +32,7 @@ function App() {
         return;
       }
       try {
-        const response = await fetch(`${API_URL}/recipes/suggestions?query=${searchQuery}`);
+        const response = await fetch(`${API_URL}/api/recipes/suggestions?query=${searchQuery}`);
         const data = await response.json();
         setSuggestions(data);
       } catch {
@@ -107,7 +107,7 @@ function App() {
                   query={searchQuery}
                   onRecipeAdded={async (dishName) => {
                     try {
-                      const response = await fetch(`${API_URL}/recipes/suggestions?query=${encodeURIComponent(dishName)}`);
+                      const response = await fetch(`${API_URL}/api/recipes/suggestions?query=${encodeURIComponent(dishName)}`);
                       if (!response.ok) throw new Error('Failed to fetch new recipe');
                       const recipes = await response.json();
                       if (recipes && recipes.length > 0) {
