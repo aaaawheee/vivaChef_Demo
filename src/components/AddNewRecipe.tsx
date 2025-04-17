@@ -48,7 +48,13 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
 
       let ingredients: Ingredient[];
       try {
-        ingredients = JSON.parse(message);
+        if (typeof message === 'string') {
+          ingredients = JSON.parse(message);
+        } else if (Array.isArray(message)) {
+          ingredients = message;
+        } else {
+          throw new Error('Unexpected format from LLM');
+        }
       } catch (parseErr) {
         console.error('Failed to parse LLM output:', parseErr);
         toast.error('Could not parse recipe from LLM.');
