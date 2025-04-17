@@ -132,6 +132,25 @@ app.get('/api/recipes/search', async (req, res) => {
   }
 });
 
+//FOR TESTING Render SERVER
+app.get('/api/test-mongo', async (req, res) => {
+  try {
+    const count = await Recipe.countDocuments();
+    const sample = await Recipe.find().limit(3).select("Dish name");
+
+    res.json({
+      message: "MongoDB is working!",
+      totalDocuments: count,
+      sampleDishes: sample
+    });
+  } catch (err) {
+    console.error('MongoDB test error:', err);
+    res.status(500).send('MongoDB not working');
+  }
+});
+
+
+
 app.post('/api/recipes', async (req, res) => {
   try {
     console.log('Incoming POST body:', req.body);
