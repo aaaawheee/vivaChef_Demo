@@ -51,31 +51,29 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
 
       console.log('Raw LLM result message:', message);
 
-      if (typeof message !== 'string' && !Array.isArray(message)) {
-        console.error('Unexpected LLM format:', message);
-        toast.error('LLM response format is invalid.');
-        return;
-      }
-
       try {
-        const cleanMessage = typeof message === 'string' ? message.trim() : JSON.stringify(message);
+        let cleaned = message.trim();
 
-        // Optional: try to sanitize a trailing comma or orphaned object
-        const sanitized = cleanMessage.replace(/,\s*{?\s*}?\s*$/, ''); // crude but useful
+        // If it ends with ", {" or ",", remove the trailing comma and anything after
+        cleaned = cleaned.replace(/,\s*\{[^}]*$/, ''); // remove partial object
+        cleaned = cleaned.replace(/,\s*\]$/, ']'); // fix comma before end
+        cleaned = cleaned.replace(/,\s*$/, ''); // remove last comma if no closing bracket
 
-        ingredients = JSON.parse(sanitized);
+        // Add missing closing bracket if needed
+        if (!cleaned.endsWith(']')) {
+          cleaned += ']';
+        }
+
+        console.log('🧼 Cleaned LLM JSON:', cleaned);
+
+        ingredients = JSON.parse(cleaned);
         console.log('✅ Parsed ingredients:', ingredients);
-      } catch (parseErr) {
-        console.error('❌ Failed to parse LLM response:', parseErr);
-        console.error('🔍 Possibly malformed JSON string:', message);
-        toast.error('LLM gave a broken response. Please try again.');
-
-        // Show a debugging alert (optional)
-        alert(`LLM response was broken:\n\n${message}`);
-
+      } catch (err) {
+        console.error('❌ Failed to parse LLM response:', err);
+        toast.error('Oops! LLM gave a broken response. Please try again.');
+        alert(`LLM gave broken JSON:\n\n${message}`);
         return;
       }
-
 
       // Save all ingredients
       const savePromises = ingredients.map((ing) =>
