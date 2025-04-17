@@ -27,7 +27,7 @@ const recipeSchema = new mongoose.Schema({
 // Create text index for search
 recipeSchema.index({ "Dish name": 'text' });
 
-const Recipe = mongoose.model('Recipe', recipeSchema, 'VivaChef');
+const Recipe = mongoose.model('Recipe', recipeSchema, 'recipe_db');
 
 // Get recipe suggestions as you type
 // Get recipe suggestions grouped by Dish name
