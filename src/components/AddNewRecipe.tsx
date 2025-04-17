@@ -44,10 +44,15 @@ const AddNewRecipe = ({ query, onRecipeAdded }: Props) => {
       });
 
       const llmJson = await llmResponse.json();
+      
       const message = llmJson?.result;
 
       let ingredients: Ingredient[];
       try {
+
+        console.log('Raw LLM result message:', message);
+
+
         if (typeof message === 'string') {
           ingredients = JSON.parse(message);
         } else if (Array.isArray(message)) {
